@@ -21,8 +21,8 @@
 
 
 	<!-- end basic args -->
- 
-<!-- the things that are "on" by default: 
+
+<!-- the things that are "on" by default:
  - camera stack (raw imagery defaults to false)
  - wheels stack
  - joystick stack
@@ -30,7 +30,7 @@
 -->
 
 <!-- general convention on remappings is that we remap the "subscribers" -->
- 
+
 	<!-- start switch args -->
 	<arg name="camera" default="true"/>
 	<arg name="/camera/raw" default="true"/>
@@ -59,7 +59,7 @@
 
 	<arg name="localization" default="true"/>
 	<arg name="/localization/local" default="true" />
-	<arg name="/localization/map_name" default="tags_tiles_lab" />
+	<arg name="/localization/map_name" default="test_map" />
 	<arg name="/localization/gui" default="false"/>
 
 	<arg name="fleet_communication" default="true"/>
@@ -67,7 +67,7 @@
 	<arg name="joystick_demo" default="false"/>
 
 	<!-- end switch args -->
-	
+
 	<!-- Enable statistics -->
 	<param name="enable_statistics" value="$(arg statistics)"/>
 
@@ -77,14 +77,14 @@
 		<!-- FSM -->
 		<!-- no remapping for FSM - full topic names specified in params yaml -->
 		<include file="$(find fsm)/launch/fsm_node.launch">
-			<arg name="veh" value="$(arg veh)"/>        
-			<arg name="config" value="$(arg config)"/>        
-			<arg name="param_file_name" value="$(arg fsm_file_name)"/>        
+			<arg name="veh" value="$(arg veh)"/>
+			<arg name="config" value="$(arg config)"/>
+			<arg name="param_file_name" value="$(arg fsm_file_name)"/>
 		</include>
 
 		<!-- car_cmd_switch_node -->
 		<!-- no remappings for car_cmd_switch - full topic names specified in params yaml -->
-		<remap from="car_cmd_switch_node/cmd_lane_following" to="lane_controller_node/lane_control"/> 
+		<remap from="car_cmd_switch_node/cmd_lane_following" to="lane_controller_node/lane_control"/>
 		<!-- need either lots more of these or none of these -->
 		<include file="$(find dagu_car)/launch/car_cmd_switch_node.launch">
 			<arg name="veh" value="$(arg veh)"/>
@@ -100,8 +100,8 @@
 	</group>
 
 	<!--End FSM -->
-	
-	<!-- Start fleet communication -->  
+
+	<!-- Start fleet communication -->
 	<group if="$(arg fleet_communication)">
 		<include file="$(find fleet_messaging)/launch/fleet_messaging.launch">
 			<arg name="iface" value="$(arg messaging_iface)"/>
@@ -110,7 +110,7 @@
 	</group>
 	<!-- End fleet communication -->
 
-	<!-- Start Camera -->  
+	<!-- Start Camera -->
 	<group if="$(arg camera)">
 		<include  file="$(find pi_camera)/launch/camera_node.launch">
 			<arg name="veh" value="$(arg veh)"/>
@@ -325,9 +325,9 @@
 			<remap from="open_loop_intersection_control_node/in_lane" to="lane_filter_node/in_lane"/>
 			<remap from="open_loop_intersection_control_node/mode" to="fsm_node/mode"/>
 			<include file="$(find intersection_control)/launch/open_loop_intersection_controller_node.launch">
-				<arg name="veh" value="$(arg veh)"/>        
-				<arg name="config" value="$(arg config)"/>        
-				<arg name="param_file_name" value="$(arg param_file_name)"/>        
+				<arg name="veh" value="$(arg veh)"/>
+				<arg name="config" value="$(arg config)"/>
+				<arg name="param_file_name" value="$(arg param_file_name)"/>
 			</include>
 		</group>
 
@@ -339,12 +339,12 @@
 
 
 			<include file="$(find fleet_planning)/launch/graph_search_server_node.launch">
-				<arg name="map_name" value="$(arg map_name)"/>        
+				<arg name="map_name" value="$(arg map_name)"/>
 				<arg name="veh" value="$(arg veh)"/>
 			</include>
 
 	        <include file="$(find fleet_planning)/launch/actions_dispatcher_node.launch">
- 				<arg name="veh" value="$(arg veh)"/>        
+ 				<arg name="veh" value="$(arg veh)"/>
 				<arg name="config" value="$(arg config)"/>
         	</include>
 		</group>
