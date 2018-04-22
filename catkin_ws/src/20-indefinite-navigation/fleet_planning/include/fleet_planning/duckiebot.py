@@ -13,6 +13,8 @@ class TaxiEvent(IntEnum):
     PICKUP_CUSTOMER = 0
     DROPOFF_CUSTOMER = 1
     ACCEPTED_REQUEST = 2
+    WAY_TO_CHARGING = 3
+    WAY_TO_CALIBRATING = 4
 
 class Instruction(Enum):
     LEFT = 'l'
@@ -87,7 +89,7 @@ class BaseDuckiebot:
     @property
     def name(self):
         return self._name
-    
+
     @property
     def path(self):
         return self._path

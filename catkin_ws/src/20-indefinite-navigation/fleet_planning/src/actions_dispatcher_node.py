@@ -116,6 +116,10 @@ class ActionsDispatcherNode:
             self._play_led_pattern("fleet_planning/customer_dropoff")
         elif taxi_event == TaxiEvent.PICKUP_CUSTOMER:
             self._play_led_pattern("fleet_planning/customer_pickup")
+        elif taxi_event == TaxiEvent.WAY_TO_CHARGING:
+            self._play_led_pattern("fleet_planning/customer_pickup")#TODO make led patterns
+        elif taxi_event == TaxiEvent.WAY_TO_CALIBRATING:
+            self._play_led_pattern("fleet_planning/customer_pickup")
 
         if duckiebot_name != self.duckiebot_name or target_node == NO_TARGET_LOCATION:
             return

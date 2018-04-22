@@ -4,6 +4,8 @@ import numpy as np
 from duckietown_msgs.msg import SegmentList, Segment, BoolStamped, StopLineReading, LanePose, FSMState, AprilTagsWithInfos, TurnIDandType, MaintenanceState
 from std_msgs.msg import Float32, Int16, Bool
 from geometry_msgs.msg import Point
+from fleet_planning.message_serialization import InstructionMessageSerializer, LocalizationMessageSerializer
+from fleet_planning.duckiebot import *
 import time
 import math
 
@@ -37,6 +39,11 @@ class MaintenanceControlNode(object):
         ## update Parameters timer
         self.params_update = rospy.Timer(rospy.Duration.from_sec(1.0), self.updateParams)
 
+        ## Graph node parameters
+        self.charging_graph_node = 1 #TODO initialize them in launch file
+        self.calibration_graph_node = 5
+        self.robot_name = rospy.get_param('/veh')
+        self.duckiebot = Duckiebot(robot_name)
 
 
 
@@ -48,19 +55,23 @@ class MaintenanceControlNode(object):
         if msg.data:
             self.maintenance_state = "WAY_TO_CHARGING"
             self.pubMaintenanceState()
+            self.duckiebot.target_location = self.charging_graph_node
+            self.publish_duckiebot_mission(TaxiEvent.WAY_TO_CHARGING)
             rospy.loginfo("[Maintenance Control Node] State: WAY_TO_CHARGING")
 
     def cbGoCalibrating(self, msg):
         if msg.data:
             self.maintenance_state = "WAY_TO_CALIBRATING"
             self.pubMaintenanceState()
+            self.duckiebot.target_location = self.calibration_graph_node
+            self.publish_duckiebot_mission(TaxiEvent.WAY_TO_CALIBRATING)
             rospy.loginfo("[Maintenance Control Node] State: WAY_TO_CALIBRATING")
 
 
-    def publish_duckiebot_mission(self, duckiebot, taxi_event):
+    def publish_duckiebot_mission(self, taxi_event):
         """ create message that sends duckiebot to its next location, according to the customer request that had been
         assigned to it"""
-        serialized_message = InstructionMessageSerializer.serialize(duckiebot.name, int(duckiebot.target_location),
+        serialized_message = InstructionMessageSerializer.serialize(self.duckiebot.name, int(self.duckiebot.target_location),
                                                                     taxi_event.value)
         self.pub_maintenance_plan_request.publish(ByteMultiArray(data=serialized_message))
 
