@@ -32,7 +32,7 @@ class ActionsDispatcherNode:
         self.last_red_line = rospy.get_time()
 
         # Subscribers:
-        self.sub_plan_request = rospy.Subscriber("~/taxi/commands", ByteMultiArray, self.new_duckiebot_mission)
+        self.sub_plan_request = rospy.Subscriber("maintenance_control_node/maintenance_commands", ByteMultiArray, self.new_duckiebot_mission)
         self.sub_red_line = rospy.Subscriber("~mode", FSMState, self.mode_update)
 
 

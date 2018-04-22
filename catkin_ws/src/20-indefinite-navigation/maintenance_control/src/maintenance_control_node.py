@@ -33,7 +33,7 @@ class MaintenanceControlNode(object):
 
         ## Publisher
         self.pub_maintenance_state = rospy.Publisher("~maintenance_state", MaintenanceState, queue_size=1)
-        self.pub_maintenance_plan_request = rospy.Publisher("~/taxi/commands", ByteMultiArray,queue_size=1)
+        self.pub_maintenance_plan_request = rospy.Publisher("~maintenance_commands", ByteMultiArray,queue_size=1)
 
 
         ## update Parameters timer
