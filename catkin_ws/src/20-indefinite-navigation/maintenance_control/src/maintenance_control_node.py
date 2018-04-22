@@ -75,7 +75,7 @@ class MaintenanceControlNode(object):
                                                                     taxi_event.value)
         self.pub_maintenance_plan_request.publish(ByteMultiArray(data=serialized_message))
 
-        rospy.loginfo('Duckiebot {} was sent to node {}'.format(duckiebot.name, duckiebot.target_location))
+        rospy.loginfo('Duckiebot {} was sent to node {}'.format(self.duckiebot.name, self.duckiebot.target_location))
 
 
     # Executes when intersection is done
