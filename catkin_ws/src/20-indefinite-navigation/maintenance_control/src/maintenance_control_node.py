@@ -2,7 +2,7 @@
 import rospy
 import numpy as np
 from duckietown_msgs.msg import SegmentList, Segment, BoolStamped, StopLineReading, LanePose, FSMState, AprilTagsWithInfos, TurnIDandType, MaintenanceState
-from std_msgs.msg import Float32, Int16, Bool
+from std_msgs.msg import Float32, Int16, Bool, ByteMultiArray
 from geometry_msgs.msg import Point
 from fleet_planning.message_serialization import InstructionMessageSerializer, LocalizationMessageSerializer
 from fleet_planning.duckiebot import *
