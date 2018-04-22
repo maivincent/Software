@@ -31,6 +31,8 @@ class MaintenanceControlNode(object):
 
         ## Publisher
         self.pub_maintenance_state = rospy.Publisher("~maintenance_state", MaintenanceState, queue_size=1)
+        self.pub_maintenance_plan_request = rospy.Publisher("~/taxi/commands", ByteMultiArray,queue_size=1)
+
 
         ## update Parameters timer
         self.params_update = rospy.Timer(rospy.Duration.from_sec(1.0), self.updateParams)
@@ -54,6 +56,15 @@ class MaintenanceControlNode(object):
             self.pubMaintenanceState()
             rospy.loginfo("[Maintenance Control Node] State: WAY_TO_CALIBRATING")
 
+
+    def publish_duckiebot_mission(self, duckiebot, taxi_event):
+        """ create message that sends duckiebot to its next location, according to the customer request that had been
+        assigned to it"""
+        serialized_message = InstructionMessageSerializer.serialize(duckiebot.name, int(duckiebot.target_location),
+                                                                    taxi_event.value)
+        self.pub_maintenance_plan_request.publish(ByteMultiArray(data=serialized_message))
+
+        rospy.loginfo('Duckiebot {} was sent to node {}'.format(duckiebot.name, duckiebot.target_location))
 
 
     # Executes when intersection is done
