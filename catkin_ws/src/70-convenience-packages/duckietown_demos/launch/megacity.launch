@@ -17,5 +17,6 @@
 		<arg name="charging_control" default="true"/>
 		<arg name="maintenance_control" default="true"/>
     <arg name="tcp_communication" default="true"/>
+		<arg name="fleet_planning" default="true"/>
 	</include>
 </launch>
