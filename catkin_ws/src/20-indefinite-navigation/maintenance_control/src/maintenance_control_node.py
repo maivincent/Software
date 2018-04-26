@@ -40,8 +40,8 @@ class MaintenanceControlNode(object):
         self.params_update = rospy.Timer(rospy.Duration.from_sec(1.0), self.updateParams)
 
         ## Graph node parameters
-        self.charging_graph_node = 1 #TODO initialize them in launch file
-        self.calibration_graph_node = 5
+        self.charging_graph_node = 59 #TODO initialize them in launch file
+        self.calibration_graph_node = 59
         self.robot_name = rospy.get_param('/veh', 'no_duckiebot')
         self.duckiebot = Duckiebot(self.robot_name)
 

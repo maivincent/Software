@@ -10,9 +10,9 @@ x, y, type     , rotation
 0,8,empty,0
 0,9,empty,0
 0,10,empty,0
-0,11,turn,180
+0,11,turn,270
 0,12,straight,90
-0,13,turn,90
+0,13,turn,180
 0,14,empty,0
 0,15,empty,0
 0,16,empty,0
@@ -85,7 +85,7 @@ x, y, type     , rotation
 4,3,straight,90
 4,4,4way,0
 4,5,straight,90
-4,6,turn,270
+4,6,turn,180
 4,7,empty,0
 4,8,straight,0
 4,9,empty,0
