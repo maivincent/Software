@@ -17,8 +17,8 @@ from fleet_planning.duckiebot import TaxiEvent, NO_TARGET_LOCATION
 
 
 class ActionsDispatcherNode:
-    _world_frame = 'world'
-    _target_frame = 'duckiebot'
+    _world_frame = 'map'
+    _target_frame = 'megabot08'
 
     def __init__(self):
         self.node_name = rospy.get_name()
