@@ -58,7 +58,7 @@ class ActionsDispatcherNode:
         return value
 
     def mode_update(self, msg):
-        if msg.state == "COORDINATION":
+        if msg.state == "INTERSECTION_COORDINATION":
             self.pub_car_cmd.publish(Twist2DStamped(v=0, omega=0))
             self.localize_at_red_line(msg)
 
