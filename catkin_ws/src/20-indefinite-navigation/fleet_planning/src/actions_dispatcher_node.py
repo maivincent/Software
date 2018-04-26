@@ -13,7 +13,7 @@ from fleet_planning.location_to_graph_mapping import IntersectionMapper
 from fleet_planning.message_serialization import InstructionMessageSerializer, LocalizationMessageSerializer
 from duckietown_msgs.msg import BoolStamped, FSMState, Twist2DStamped
 from fleet_planning.duckiebot import TaxiEvent, NO_TARGET_LOCATION
-from rgb_led.srv import PlayLEDPattern
+# from rgb_led.srv import PlayLEDPattern
 
 
 class ActionsDispatcherNode:
@@ -109,17 +109,17 @@ class ActionsDispatcherNode:
     def new_duckiebot_mission(self, message):
         duckiebot_name, target_node, taxi_event = InstructionMessageSerializer.deserialize("".join(map(chr, message.data)))
 
-        # Signal using the LEDs.
-        if taxi_event == TaxiEvent.ACCEPTED_REQUEST:
-            self._play_led_pattern("fleet_planning/going_to_customer")
-        elif taxi_event == TaxiEvent.DROPOFF_CUSTOMER:
-            self._play_led_pattern("fleet_planning/customer_dropoff")
-        elif taxi_event == TaxiEvent.PICKUP_CUSTOMER:
-            self._play_led_pattern("fleet_planning/customer_pickup")
-        elif taxi_event == TaxiEvent.WAY_TO_CHARGING:
-            self._play_led_pattern("fleet_planning/customer_pickup")#TODO make led patterns
-        elif taxi_event == TaxiEvent.WAY_TO_CALIBRATING:
-            self._play_led_pattern("fleet_planning/customer_pickup")
+        # # Signal using the LEDs.
+        # if taxi_event == TaxiEvent.ACCEPTED_REQUEST:
+        #     self._play_led_pattern("fleet_planning/going_to_customer")
+        # elif taxi_event == TaxiEvent.DROPOFF_CUSTOMER:
+        #     self._play_led_pattern("fleet_planning/customer_dropoff")
+        # elif taxi_event == TaxiEvent.PICKUP_CUSTOMER:
+        #     self._play_led_pattern("fleet_planning/customer_pickup")
+        # elif taxi_event == TaxiEvent.WAY_TO_CHARGING:
+        #     self._play_led_pattern("fleet_planning/customer_pickup")#TODO make led patterns
+        # elif taxi_event == TaxiEvent.WAY_TO_CALIBRATING:
+        #     self._play_led_pattern("fleet_planning/customer_pickup")
 
         if duckiebot_name != self.duckiebot_name or target_node == NO_TARGET_LOCATION:
             return
@@ -164,14 +164,14 @@ class ActionsDispatcherNode:
                 self.pub_action.publish(Int16(-1))
             print 'Action: go {}!\n\n ************\n'.format(action_name)
 
-    def _play_led_pattern(self, pattern):
-        play_pattern_service = rospy.ServiceProxy("/LEDPatternNode/play_pattern", PlayLEDPattern)
-        try:
-            response = play_pattern_service(pattern, 10)
-            rospy.loginfo("Called play pattern service ({}). Got response: {}".format(pattern,response))
-        except rospy.ServiceException as exc:
-            rospy.logwarn("Call to play LED pattern service failed")
-            rospy.logwarn(exc)
+    # def _play_led_pattern(self, pattern):
+    #     play_pattern_service = rospy.ServiceProxy("/LEDPatternNode/play_pattern", PlayLEDPattern)
+    #     try:
+    #         response = play_pattern_service(pattern, 10)
+    #         rospy.loginfo("Called play pattern service ({}). Got response: {}".format(pattern,response))
+    #     except rospy.ServiceException as exc:
+    #         rospy.logwarn("Call to play LED pattern service failed")
+    #         rospy.logwarn(exc)
 
     def on_shutdown(self):
         rospy.loginfo("[ActionsDispatcherNode] Shutdown.")
