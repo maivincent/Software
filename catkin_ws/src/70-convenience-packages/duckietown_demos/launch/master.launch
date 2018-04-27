@@ -95,9 +95,9 @@
 
 <arg name="SLAM" default="false"/>
 
-<arg name="localization" default="false"/>
-<arg name="/localization/local" default="false" />
-<arg name="/localization/map_name" default="open_house_dp6" />
+<arg name="localization" default="true"/>
+<arg name="/localization/local" default="true" />
+<arg name="/localization/map_name" default="autolab" />
 <arg name="/localization/gui" default="false"/>
 
 <arg name="maintenance_control" default="false"/>
