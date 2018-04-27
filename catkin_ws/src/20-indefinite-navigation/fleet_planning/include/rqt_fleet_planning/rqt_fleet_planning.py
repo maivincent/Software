@@ -136,8 +136,9 @@ class RQTFleetPlanning(Plugin):
         q_img_tmp = QImage(cvImg.data, width, height, bytesPerLine, QImage.Format_RGB888)
         self.image = QPixmap(q_img_tmp)
         #show it on the GUI
-        self._widget.label_image.setGeometry(QtCore.QRect(10, 10, self.image.width(), self.image.height())) #(x, y, width, height)
+        self._widget.label_image.setGeometry(QtCore.QRect(10, 10, 500, 730)) #(x, y, width, height)
         self._widget.label_image.setPixmap(self.image)
+        self._widget.label_image.setScaledContents(True)
 
     def updateLivingDuckiebotItems(self):
         living_duckie_list = map(lambda db:db.name,self._all_living_duckiebots)
