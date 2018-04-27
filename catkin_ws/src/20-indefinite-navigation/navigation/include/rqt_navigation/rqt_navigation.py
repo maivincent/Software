@@ -2,7 +2,7 @@ import os, sys, pickle, rospy
 
 from qt_gui.plugin import Plugin
 from python_qt_binding import loadUi
-from python_qt_binding.QtGui import QWidget
+from python_qt_binding.QtWidgets import QWidget
 from duckietown_msgs.msg import SourceTargetNodes
 #path_dir = os.path.dirname(__file__) + '/../../scripts/'
 #sys.path.append(path_dir)
@@ -20,12 +20,12 @@ class RQTNavigation(Plugin):
         ui_file = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'rqt_navigation.ui')
         loadUi(ui_file, self._widget)
         self._widget.setObjectName('rqt_navigation')
-        # Show _widget.windowTitle on left-top of each plugin (when 
-        # it's set in _widget). This is useful when you open multiple 
-        # plugins at once. Also if you open multiple instances of your 
-        # plugin at once, these lines add number to make it easy to 
+        # Show _widget.windowTitle on left-top of each plugin (when
+        # it's set in _widget). This is useful when you open multiple
+        # plugins at once. Also if you open multiple instances of your
+        # plugin at once, these lines add number to make it easy to
         # tell from pane to pane.
-        
+
         if context.serial_number() > 1:
             self._widget.setWindowTitle(self._widget.windowTitle() + (' (%d)' % context.serial_number()))
         # Add widget to the user interface
@@ -65,7 +65,7 @@ class RQTNavigation(Plugin):
         start_node = str(self._widget.comboBoxStart.currentText())
         target_node = str(self._widget.comboBoxDestination.currentText())
         self.pub.publish(SourceTargetNodes(start_node, target_node))
-        
+
 
     def shutdown_plugin(self):
         # TODO unregister all publishers here
