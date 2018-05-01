@@ -107,7 +107,7 @@
 <arg name="tcp_communication" default="false"/>
 
 
-<arg name="fleet_planning" default="false"/>
+<arg name="fleet_planning" default="true"/>
 <arg name="/fleet_planning/intersection_control" default="true"/>
 <arg name="/fleet_planning/graph_planner" default="true"/>
 <arg name="/fleet_planning/led_pattern" default="true"/>
