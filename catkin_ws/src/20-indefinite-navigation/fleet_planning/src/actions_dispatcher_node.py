@@ -37,9 +37,12 @@ class ActionsDispatcherNode:
         self.sub_plan_request = rospy.Subscriber("~maintenance_state", MaintenanceState, self.cbMaintenanceState)
         self.sub_red_line = rospy.Subscriber("~mode", FSMState, self.mode_update)
         self.sub_turn_type = rospy.Subscriber("~turn_id_and_type", TurnIDandType, self.cbTurnType)
+
         # Publishers:
         self.pub_action = rospy.Publisher("~turn_id_and_type", TurnIDandType, queue_size=1, latch=False)
 
+        # location listener
+        self.listener_transform = tf.TransformListener()
 
         # mapping: location -> node number
         self.graph_creator = graph_creator()
@@ -114,7 +117,16 @@ class ActionsDispatcherNode:
     def update_current_node_from_tag_id(self,tag_id):
         #TODO: map ID tags to node names
 
-        self.current_node = 1
+        self.current_node = None
+        try:
+            (trans, rot) = self.listener_transform.lookupTransform(self._world_frame, self._target_frame,
+                                                                   rospy.Time(0))
+            rot = tf.transformations.euler_from_quaternion(rot)[2]
+            self.current_node = self.location_to_node_mapper.get_node_name(trans[:2], np.degrees(rot))
+
+        except tf2_ros.LookupException:
+            rospy.logwarn('Duckiebot: {} location transform not found. Trying again.'.format(self.duckiebot_name))
+
 
     # def _play_led_pattern(self, pattern):
     #     play_pattern_service = rospy.ServiceProxy("/LEDPatternNode/play_pattern", PlayLEDPattern)
