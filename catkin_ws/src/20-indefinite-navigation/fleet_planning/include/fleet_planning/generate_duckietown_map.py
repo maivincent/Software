@@ -13,7 +13,7 @@ class Node():
 			self.name = name
 		self.pos = pos
 		self.direction = direction
-		
+
 
 	def flow(self, node):
 		return (self.direction[0]+node.direction[0])**2 + (self.direction[1]+node.direction[1])**2
@@ -34,7 +34,7 @@ class Node():
 		rotMatrix = np.matrix([[np.cos(theta), -np.sin(theta), x+0.5],
 			[np.sin(theta), np.cos(theta), y+0.5],
 			[0,0,1]])
-		
+
 		res = np.dot(rotMatrix,vec)
 		res = res[0:2,0]
 		res = res.tolist()
@@ -213,7 +213,7 @@ class graph_creator():
 		self.tile_map = []
 	def add_node_locations(self,node_loc):
 		self.node_locations.update(node_loc)
-	   
+
 	def add_edges(self, ed):
 		for edge in ed:
 			source = edge[0]
@@ -224,9 +224,9 @@ class graph_creator():
 	def pickle_save(self, name='duckietown_map.pkl'):
 		afile = open(r'maps/duckietown_map.pkl', 'w+')
 		pickle.dump([self.edges, self.node_locations], afile)
-		afile.close()		
+		afile.close()
 
-	def build_graph_from_csv(self, map_dir, csv_filename='tiles_lab'):
+	def build_graph_from_csv(self, map_dir, csv_filename='autolab_tiles_map'):
 		map_path = os.path.join(map_dir, csv_filename + '.csv')
 		with open(map_path, 'rb') as f:
 			spamreader = csv.reader(f,skipinitialspace=True)

@@ -40,7 +40,7 @@ class RQTFleetPlanning(Plugin):
         self._widget.setObjectName('rqt_fleet_planning')
 
         # Load parameters
-        self.map_name = rospy.get_param('/map_name', 'tiles_lab')
+        self.map_name = rospy.get_param('/map_name', 'autolab_tiles_map')
         self.script_dir = os.path.dirname(__file__)
         self.super_script_dir = self.script_dir + '/../../src/maps/'
         self.tile_size = rospy.get_param('tile_size',201)

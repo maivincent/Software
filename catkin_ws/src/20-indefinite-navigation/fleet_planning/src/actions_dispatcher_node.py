@@ -28,22 +28,18 @@ class ActionsDispatcherNode:
 
         self.actions = []
         self.path = []
+        self.current_node = None
         self.target_node = None
         self.last_red_line = rospy.get_time()
+        self.active = False
 
         # Subscribers:
-        self.sub_plan_request = rospy.Subscriber("maintenance_control_node/maintenance_commands", ByteMultiArray, self.new_duckiebot_mission)
+        self.sub_plan_request = rospy.Subscriber("~maintenance_state", MaintenanceState, self.cbMaintenanceState)
         self.sub_red_line = rospy.Subscriber("~mode", FSMState, self.mode_update)
-
-
-        # location listener
-        self.listener_transform = tf.TransformListener()
-
+        self.sub_turn_type = rospy.Subscriber("~turn_id_and_type", TurnIDandType, self.cbTurnType)
         # Publishers:
-        self.pub_action = rospy.Publisher("~turn_type", Int16, queue_size=1, latch=False)
-        self.pub_location_node = rospy.Publisher("/taxi/location", ByteMultiArray, queue_size=1)
-        self.pub_intersection_go = rospy.Publisher('simple_coordinator_node/intersection_go', BoolStamped, queue_size=1)
-        self.pub_car_cmd = rospy.Publisher('simple_coordinator_node/car_cmd', Twist2DStamped, queue_size=1)
+        self.pub_action = rospy.Publisher("~turn_id_and_type", TurnIDandType, queue_size=1, latch=False)
+
 
         # mapping: location -> node number
         self.graph_creator = graph_creator()
@@ -57,74 +53,21 @@ class ActionsDispatcherNode:
         rospy.loginfo("[%s] %s = %s " % (self.node_name, param_name, value))
         return value
 
-    def mode_update(self, msg):
-        if msg.state == "INTERSECTION_COORDINATION":
-            self.pub_car_cmd.publish(Twist2DStamped(v=0, omega=0))
-            self.localize_at_red_line(msg)
-
-    def localize_at_red_line(self, msg):
-        rospy.loginfo('Localizing.')
-
-        start_time = rospy.get_time()
-        node = None
-        rate = rospy.Rate(1.0)
-        while not node and rospy.get_time() - start_time < 5.0:  # TODO: tune this
-
-            try:
-                (trans, rot) = self.listener_transform.lookupTransform(self._world_frame, self._target_frame,
-                                                                       rospy.Time(0))
-                rot = tf.transformations.euler_from_quaternion(rot)[2]
-                node = self.location_to_node_mapper.get_node_name(trans[:2], np.degrees(rot))
-
-            except tf2_ros.LookupException:
-                rospy.logwarn('Duckiebot: {} location transform not found. Trying again.'.format(self.duckiebot_name))
-
-            if not node:
-                rate.sleep()
-
-        if not node:
-            rospy.logwarn('Duckiebot: {} location update failed. Location not updated.'.format(self.duckiebot_name))
-            return
-
-        node = int(node)
-        rospy.loginfo('Duckiebot {} located at node {}'.format(self.duckiebot_name, node))
-
-        location_message = LocalizationMessageSerializer.serialize(self.duckiebot_name, node, self.path)
-        self.pub_location_node.publish(ByteMultiArray(data=location_message))
-
-        if self.target_node is None or self.target_node == node:
-            rate_recursion = rospy.Rate(0.5)
-            rate_recursion.sleep()
-            self.localize_at_red_line(msg)  # repeat until new duckiebot mission was published
-
+    def cbMaintenanceState(self, msg):
+        if msg.state == "WAY_TO_CHARGING" or msg.state == "WAY_TO_CALIBRATING":
+            self.active = True
         else:
+            self.active = False
+
+    def cbTurnType(self, msg):
+        self.tag_id = msg.tag_id
+        self.turn_type = msg.turn_type
+
+        if self.active == True:
+            self.update_current_node_from_tag_id(self.tag_id)
             self.graph_search(node, self.target_node)
-            self.pub_intersection_go.publish(BoolStamped(header=msg.header, data=True))
-            rate = rospy.Rate(1.0)  # hack: make sure that intersection control is ready for the turn (fsm problem)
-            rate.sleep()
-            self.dispatch_action()
-            location_message = LocalizationMessageSerializer.serialize(self.duckiebot_name, node, self.path)
-            self.pub_location_node.publish(ByteMultiArray(data=location_message))
 
-    def new_duckiebot_mission(self, message):
-        duckiebot_name, target_node, taxi_event = InstructionMessageSerializer.deserialize("".join(map(chr, message.data)))
-
-        # # Signal using the LEDs.
-        # if taxi_event == TaxiEvent.ACCEPTED_REQUEST:
-        #     self._play_led_pattern("fleet_planning/going_to_customer")
-        # elif taxi_event == TaxiEvent.DROPOFF_CUSTOMER:
-        #     self._play_led_pattern("fleet_planning/customer_dropoff")
-        # elif taxi_event == TaxiEvent.PICKUP_CUSTOMER:
-        #     self._play_led_pattern("fleet_planning/customer_pickup")
-        # elif taxi_event == TaxiEvent.WAY_TO_CHARGING:
-        #     self._play_led_pattern("fleet_planning/customer_pickup")#TODO make led patterns
-        # elif taxi_event == TaxiEvent.WAY_TO_CALIBRATING:
-        #     self._play_led_pattern("fleet_planning/customer_pickup")
-
-        if duckiebot_name != self.duckiebot_name or target_node == NO_TARGET_LOCATION:
-            return
-
-        self.target_node = target_node
+        self.dispatch_action(msg)
 
     def graph_search(self, source_node, target_node):
         print 'Requesting map for src: ', source_node, ' and target: ', target_node
@@ -146,23 +89,32 @@ class ActionsDispatcherNode:
         except rospy.ServiceException, e:
             print "Service call failed: %s"%e
 
-    def dispatch_action(self):
+    def dispatch_action(self,msg):
         if len(self.actions) > 0:
             action = self.actions.pop(0)
             action_name = None
             if action == 's':
                 action_name = 'STRAIGHT'
-                self.pub_action.publish(Int16(1))
+                msg.turn_type = Int16(1)
+                self.pub_action.publish(msg)
             elif action == 'r':
                 action_name = 'RIGHT'
-                self.pub_action.publish(Int16(2))
+                msg.turn_type = Int16(2)
+                self.pub_action.publish(msg)
             elif action == 'l':
                 action_name = 'LEFT'
-                self.pub_action.publish(Int16(0))
+                msg.turn_type = Int16(0)
+                self.pub_action.publish(msg)
             elif action == 'w':
                 action_name = 'WAIT'
-                self.pub_action.publish(Int16(-1))
+                msg.turn_type = Int16(-1)
+                self.pub_action.publish(msg)
             print 'Action: go {}!\n\n ************\n'.format(action_name)
+
+    def update_current_node_from_tag_id(self,tag_id):
+        #TODO: map ID tags to node names
+
+        self.current_node = 1
 
     # def _play_led_pattern(self, pattern):
     #     play_pattern_service = rospy.ServiceProxy("/LEDPatternNode/play_pattern", PlayLEDPattern)
