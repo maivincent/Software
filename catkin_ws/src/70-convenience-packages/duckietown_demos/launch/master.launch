@@ -835,8 +835,10 @@
 		<group if="$(arg /fleet_planning/graph_planner)">
 
 			<!-- remapping outputs since there are two different possible turn types -->
-			<remap from="actions_dispatcher_node/turn_type" to="open_loop_intersection_control_node/turn_type" />
-			<remap from="actions_dispatcher_node/mode" to="fsm_node/mode"/>
+			<remap from="random_april_tag_turns_node/turn_id_and_type" to="actions_dispatcher_node/turn_id_and_type"/>
+			<remap from="actions_dispatcher_node/turn_id_and_type" to="charging_control_node/turn_id_and_type" />
+			<remap from="maintenance_control_node/maintenance_state" to="actions_dispatcher_node/maintenance_state"/>
+
 
 
 			<include file="$(find fleet_planning)/launch/graph_search_server_node.launch">

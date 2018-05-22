@@ -67,8 +67,8 @@ class ActionsDispatcherNode:
         self.turn_type = msg.turn_type
 
         if self.active == True:
-            self.update_current_node_from_tag_id(self.tag_id)
-            self.graph_search(node, self.target_node)
+            self.update_current_node()
+            self.graph_search(self.current_node, self.target_node)
 
         self.dispatch_action(msg)
 
@@ -114,7 +114,7 @@ class ActionsDispatcherNode:
                 self.pub_action.publish(msg)
             print 'Action: go {}!\n\n ************\n'.format(action_name)
 
-    def update_current_node_from_tag_id(self,tag_id):
+    def update_current_node(self):
         #TODO: map ID tags to node names
 
         self.current_node = None
