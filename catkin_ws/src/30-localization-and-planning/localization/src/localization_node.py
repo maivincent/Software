@@ -48,6 +48,11 @@ class LocalizationNode(object):
         for tag in msg_tag.detections:
             try:
                 Tt_w = self.tfbuf.lookup_transform(self.world_frame, "tag_{id}".format(id=tag.id), rospy.Time(), rospy.Duration(1))
+                if Tt_w == None:
+                    print 'Retrieved nothing tf -> tag to world frame'
+                else:
+                    print 'Retrieved something'
+                    print Tt_w
                 Mtbase_w=self.transform_to_matrix(Tt_w.transform)
                 Mt_tbase = tr.concatenate_matrices(tr.translation_matrix((0,0,0.17)), tr.euler_matrix(0,0,np.pi))
                 Mt_w = tr.concatenate_matrices(Mtbase_w,Mt_tbase)
