@@ -744,7 +744,7 @@
 <!-- Start Maintenance Trajectory Planning -->
 <group if="$(arg fleet_planning)">
 		<!-- remapping outputs since there are two different possible turn types -->
-		<remap from="actions_dispatcher_node/turn_id_and_type" to="random_april_tag_turns_node/turn_id_and_type"/>
+		<remap from="actions_dispatcher_node/random_turn_id_and_type" to="random_april_tag_turns_node/turn_id_and_type"/>
 		<remap from="actions_dispatcher_node/maintenance_state" to="maintenance_control_node/maintenance_state"/>
 
 
