@@ -35,7 +35,7 @@ class ActionsDispatcherNode:
 
         # Subscribers:
         self.sub_plan_request = rospy.Subscriber("~maintenance_state", MaintenanceState, self.cbMaintenanceState)
-        self.sub_red_line = rospy.Subscriber("~mode", FSMState, self.mode_update)
+        # self.sub_red_line = rospy.Subscriber("~mode", FSMState, self.mode_update)
         self.sub_turn_type = rospy.Subscriber("~turn_id_and_type", TurnIDandType, self.cbTurnType)
 
         # Publishers:
