@@ -48,11 +48,6 @@ class LocalizationNode(object):
         for tag in msg_tag.detections:
             try:
                 Tt_w = self.tfbuf.lookup_transform(self.world_frame, "tag_{id}".format(id=tag.id), rospy.Time(), rospy.Duration(1))
-                if Tt_w == None:
-                    print 'Retrieved nothing tf -> tag to world frame'
-                else:
-                    print 'Retrieved something'
-                    print Tt_w
                 Mtbase_w=self.transform_to_matrix(Tt_w.transform)
                 Mt_tbase = tr.concatenate_matrices(tr.translation_matrix((0,0,0.17)), tr.euler_matrix(0,0,np.pi))
                 Mt_w = tr.concatenate_matrices(Mtbase_w,Mt_tbase)
@@ -67,7 +62,8 @@ class LocalizationNode(object):
                 rospy.logwarn(ex.message)
 
         Tr_w =  avg.get_average() # Average of the opinions
-
+        print 'Tr_w'
+        print Tr_w
         # Broadcast the robot transform
         if Tr_w is not None:
             # Set the z translation, and x and y rotations to 0
@@ -80,6 +76,8 @@ class LocalizationNode(object):
             T.header.frame_id = self.world_frame
             T.header.stamp = rospy.Time.now()
             T.child_frame_id = self.duckiebot_frame
+            print 'Tr_w for publishing'
+            print Tr_w
             self.pub_tf.publish(TFMessage([T]))
             self.lifetimer = rospy.Time.now()
 
