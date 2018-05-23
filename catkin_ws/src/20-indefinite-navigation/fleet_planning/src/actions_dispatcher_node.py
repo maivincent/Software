@@ -59,12 +59,15 @@ class ActionsDispatcherNode:
     def cbMaintenanceState(self, msg):
         if msg.state == "WAY_TO_CHARGING" or msg.state == "WAY_TO_CALIBRATING":
             self.active = True
+            print 'ActionsDispatcherNode is active'
+
         else:
             self.active = False
 
     def cbTurnType(self, msg):
         self.tag_id = msg.tag_id
         self.turn_type = msg.turn_type
+        print 'Callback cbTurnType is working'
 
         if self.active == True:
             self.update_current_node()
