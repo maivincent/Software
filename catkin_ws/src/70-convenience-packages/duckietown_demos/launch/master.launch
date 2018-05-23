@@ -821,9 +821,9 @@
 	<!-- Start Maintenance Trajectory Planning -->
 	<group if="$(arg fleet_planning)">
 			<!-- remapping outputs since there are two different possible turn types -->
-			<remap from="random_april_tag_turns_node/turn_id_and_type" to="actions_dispatcher_node/turn_id_and_type"/>
-			<remap from="actions_dispatcher_node/turn_id_and_type" to="charging_control_node/turn_id_and_type" />
-			<remap from="maintenance_control_node/maintenance_state" to="actions_dispatcher_node/maintenance_state"/>
+			<remap from="actions_dispatcher_node/turn_id_and_type" to="random_april_tag_turns_node/turn_id_and_type"/>
+			<remap from="charging_control_node/turn_id_and_type" to="actions_dispatcher_node/turn_id_and_type" />
+			<remap from="actions_dispatcher_node/maintenance_state" to="maintenance_control_node/maintenance_state"/>
 
 
 			<include file="$(find fleet_planning)/launch/graph_search_server_node.launch">
