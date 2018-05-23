@@ -817,28 +817,13 @@
 </group>
 <!-- End localization -->
 
-	<!-- Start Fleet Planning -->
+
+	<!-- Start Maintenance Trajectory Planning -->
 	<group if="$(arg fleet_planning)">
-		<group if="$(arg /fleet_planning/intersection_control)">
-			<!-- open loop intersection_controller -->
-			<remap from="open_loop_intersection_control_node/lane_pose" to="lane_filter_node/lane_pose"/>
-			<remap from="open_loop_intersection_control_node/stop_line_reading" to="stop_line_filter_node/stop_line_reading"/>
-			<remap from="open_loop_intersection_control_node/in_lane" to="lane_filter_node/in_lane"/>
-			<remap from="open_loop_intersection_control_node/mode" to="fsm_node/mode"/>
-			<include file="$(find intersection_control)/launch/open_loop_intersection_controller_node.launch">
-				<arg name="veh" value="$(arg veh)"/>
-				<arg name="config" value="$(arg config)"/>
-				<arg name="param_file_name" value="$(arg param_file_name)"/>
-			</include>
-		</group>
-
-		<group if="$(arg /fleet_planning/graph_planner)">
-
 			<!-- remapping outputs since there are two different possible turn types -->
 			<remap from="random_april_tag_turns_node/turn_id_and_type" to="actions_dispatcher_node/turn_id_and_type"/>
 			<remap from="actions_dispatcher_node/turn_id_and_type" to="charging_control_node/turn_id_and_type" />
 			<remap from="maintenance_control_node/maintenance_state" to="actions_dispatcher_node/maintenance_state"/>
-
 
 
 			<include file="$(find fleet_planning)/launch/graph_search_server_node.launch">
@@ -850,7 +835,6 @@
  				<arg name="veh" value="$(arg veh)"/>
 				<arg name="config" value="$(arg config)"/>
         	</include>
-		</group>
 	</group>
 	<!-- End Fleet Planning -->
 
