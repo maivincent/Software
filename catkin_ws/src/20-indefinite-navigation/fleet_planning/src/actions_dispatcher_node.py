@@ -72,7 +72,8 @@ class ActionsDispatcherNode:
 
         if self.active == True:
             self.update_current_node()
-            self.graph_search(self.current_node, self.target_node)
+            if self.current_node != None:
+                self.graph_search(self.current_node, self.target_node)
 
         if self.graphSearchSuccessful == True:
             self.dispatch_action(msg)
