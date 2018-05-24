@@ -125,6 +125,10 @@ class ActionsDispatcherNode:
             (trans, rot) = self.listener_transform.lookupTransform(self._world_frame, self._target_frame,
                                                                    rospy.Time(0))
             rot = tf.transformations.euler_from_quaternion(rot)[2]
+            print '-------------- Trans: '
+            print trans
+            print '-------------- Rot: '
+            print rot
             self.current_node = self.location_to_node_mapper.get_node_name(trans[:2], np.degrees(rot))
 
         except tf2_ros.LookupException:
