@@ -32,6 +32,7 @@ class ActionsDispatcherNode:
         self.target_node = 59
         self.last_red_line = rospy.get_time()
         self.active = False
+        self.graphSearchSuccessful = False
 
         # Subscribers:
         self.sub_plan_request = rospy.Subscriber("~maintenance_state", MaintenanceState, self.cbMaintenanceState)
@@ -73,7 +74,8 @@ class ActionsDispatcherNode:
             self.update_current_node()
             self.graph_search(self.current_node, self.target_node)
 
-        self.dispatch_action(msg)
+        if self.graphSearchSuccessful == True
+            self.dispatch_action(msg)
 
     def graph_search(self, source_node, target_node):
         print 'Requesting map for src: ', source_node, ' and target: ', target_node
@@ -89,11 +91,13 @@ class ActionsDispatcherNode:
                 # remove 'f' (follow line) from actions
                 self.actions = [x for x in actions if x != 'f']
                 print '\n \n ************ \n {} at node {} \n \n Actions to be executed: {}'.format(self.duckiebot_name, source_node, self.actions)
+                self.graphSearchSuccessful = True
             else:
                 print 'No actions to be executed'
 
         except rospy.ServiceException, e:
             print "Service call failed: %s"%e
+            self.graphSearchSuccessful = False
 
     def dispatch_action(self,msg):
         if len(self.actions) > 0:
@@ -119,8 +123,6 @@ class ActionsDispatcherNode:
 
     def update_current_node(self):
         #TODO: map ID tags to node names
-
-        self.current_node = None
         try:
             (trans, rot) = self.listener_transform.lookupTransform(self._world_frame, self._target_frame,
                                                                    rospy.Time(0))
