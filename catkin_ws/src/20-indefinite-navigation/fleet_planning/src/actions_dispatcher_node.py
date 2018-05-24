@@ -66,6 +66,8 @@ class ActionsDispatcherNode:
             self.active = False
 
     def cbTurnType(self, msg):
+        self.graphSearchSuccessful = False
+        
         self.tag_id = msg.tag_id
         self.turn_type = msg.turn_type
         print 'Callback cbTurnType is working'
@@ -98,7 +100,7 @@ class ActionsDispatcherNode:
 
         except rospy.ServiceException, e:
             print "Service call failed: %s"%e
-            self.graphSearchSuccessful = False
+
 
     def dispatch_action(self,msg):
         if len(self.actions) > 0:
