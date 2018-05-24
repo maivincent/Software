@@ -101,19 +101,19 @@ class ActionsDispatcherNode:
             action_name = None
             if action == 's':
                 action_name = 'STRAIGHT'
-                msg.turn_type = Int16(1)
+                msg.turn_type = 1
                 self.pub_action.publish(msg)
             elif action == 'r':
                 action_name = 'RIGHT'
-                msg.turn_type = Int16(2)
+                msg.turn_type = 2
                 self.pub_action.publish(msg)
             elif action == 'l':
                 action_name = 'LEFT'
-                msg.turn_type = Int16(0)
+                msg.turn_type = 0
                 self.pub_action.publish(msg)
             elif action == 'w':
                 action_name = 'WAIT'
-                msg.turn_type = Int16(-1)
+                msg.turn_type = -1
                 self.pub_action.publish(msg)
             print 'Action: go {}!\n\n ************\n'.format(action_name)
 
