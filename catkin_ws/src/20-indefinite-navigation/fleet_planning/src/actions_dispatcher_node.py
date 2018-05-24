@@ -123,7 +123,11 @@ class ActionsDispatcherNode:
 
     def update_current_node(self):
         #TODO: map ID tags to node names
+        rate = rospy.Rate(1.0)
         try:
+
+            t = self.listener_transform.getLatestCommonTime(self._world_frame, self._target_frame)
+            print 'LatestCommonTime: ' + repr(t)
             (trans, rot) = self.listener_transform.lookupTransform(self._world_frame, self._target_frame,
                                                                    rospy.Time(0))
             rot = tf.transformations.euler_from_quaternion(rot)[2]
