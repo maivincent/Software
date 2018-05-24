@@ -130,6 +130,7 @@ class ActionsDispatcherNode:
             print '-------------- Rot: '
             print rot
             self.current_node = self.location_to_node_mapper.get_node_name(trans[:2], np.degrees(rot))
+            print 'Current node:      ' + repr(self.current_node)
 
         except tf2_ros.LookupException:
             rospy.logwarn('Duckiebot: {} location transform not found. Trying again.'.format(self.duckiebot_name))
