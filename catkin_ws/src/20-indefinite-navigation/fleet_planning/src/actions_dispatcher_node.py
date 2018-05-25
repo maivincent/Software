@@ -29,7 +29,7 @@ class ActionsDispatcherNode:
         self.actions = []
         self.path = []
         self.current_node = None
-        self.target_node = 59
+        self.target_node = 231 #originaly 59
         self.last_red_line = rospy.get_time()
         self.active = False
         self.graphSearchSuccessful = False
@@ -67,15 +67,16 @@ class ActionsDispatcherNode:
 
     def cbTurnType(self, msg):
         self.graphSearchSuccessful = False
-        
+
         self.tag_id = msg.tag_id
         self.turn_type = msg.turn_type
         print 'Callback cbTurnType is working'
 
         if self.active == True:
-            self.update_current_node()
-            if self.current_node != None:
-                self.graph_search(self.current_node, self.target_node)
+            #self.update_current_node()
+            #if self.current_node != None:
+            self.current_node = self.tag_id
+            self.graph_search(self.current_node, self.target_node)
 
         if self.graphSearchSuccessful == True:
             self.dispatch_action(msg)
