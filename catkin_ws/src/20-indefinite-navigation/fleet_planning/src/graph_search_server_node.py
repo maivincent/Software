@@ -40,7 +40,7 @@ class graph_search_server():
         for n in range(1,150):
             if n % 2 == 1:
                 print 'Node: ' + repr(n)
-                print self.duckietown_graph.get_node_pos(n)
+                print self.duckietown_graph.get_node_pos(str(n))
                 print '-----------------'
 
 
