@@ -36,10 +36,18 @@ class graph_search_server():
         path = self.duckietown_problem.astar_search()
         return GraphSearchResponse(path.actions, path.path)
 
+    def print_all_node_names_and_positions(self):
+        for n in range(0,150):
+            print 'Node: ' + repr(n)
+            print self.duckietown_graph.get_node_pos(n)
+            print '-----------------'
+        
 
 if __name__ == "__main__":
     rospy.init_node('graph_search_server_node')
     gss = graph_search_server()
     print 'Starting server...\n'
+    #debug
+    gss.print_all_node_names_and_positions()
     s = rospy.Service('graph_search', GraphSearch, gss.handle_graph_search)
     rospy.spin()
