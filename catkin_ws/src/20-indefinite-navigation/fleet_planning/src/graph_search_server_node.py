@@ -21,18 +21,24 @@ class graph_search_server():
         gc = graph_creator()
         self.duckietown_graph = gc.build_graph_from_csv(map_dir=map_dir, csv_filename=map_name)
         self.duckietown_problem = GraphSearchProblem(self.duckietown_graph, None, None)
+        self.apriltags_mapping = self.duckietown_graph.get_apriltags_mapping(map_dir=map_dir,csv_filename='autolab_tags_map')
+        #apriltags_mapping[tagID] = node
         print "Graph loaded successfully!\n"
 
     def handle_graph_search(self, req):
         """takes request, calculates path and creates corresponding graph image. returns path"""
         # Checking if nodes exists
-        if (req.source_node not in self.duckietown_graph) or (req.target_node not in self.duckietown_graph):
+        source_node = apriltags_mapping.get(req.source_node)
+        target_node = apriltags_mapping.get(req.target_node)
+        print 'Tag ID source node: ' + repr(req.source_node) + ' ---> Graph source node: ' +repr(source_node)
+        print 'Tag ID target node: ' + repr(req.target_node) + ' ---> Graph target node: ' +repr(target_node)
+        if source_node == None or target_node == None:
             print "Source or target node do not exist."
             return GraphSearchResponse([])
 
         # Running A*
-        self.duckietown_problem.start = req.source_node
-        self.duckietown_problem.goal = req.target_node
+        self.duckietown_problem.start = source_node
+        self.duckietown_problem.goal = target_node
         path = self.duckietown_problem.astar_search()
         return GraphSearchResponse(path.actions, path.path)
 
@@ -41,6 +47,7 @@ class graph_search_server():
             if n % 2 == 1:
                 print 'Node: ' + repr(n)
                 print self.duckietown_graph.get_node_pos(str(n))
+                print 'Tag ID node: ' + repr(apriltags_mapping.get(n))
                 print '-----------------'
 
 

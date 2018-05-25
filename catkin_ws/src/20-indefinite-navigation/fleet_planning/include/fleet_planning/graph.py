@@ -42,7 +42,7 @@ class Graph(object):
     def add_node(self, node):
         """Adds a node to the graph."""
         self._nodes.add(node)
-    
+
     def add_edge(self, node1, node2, weight=1.0,action=None, bidirectional=False):
         """Adds an edge between node1 and node2. Adds the nodes to the graph first
         if they don't exist."""
@@ -90,7 +90,7 @@ class Graph(object):
     def node_edges(self, node):
         if not node in self:
             raise NodeNotInGraph(node)
-        return self._edges.get(node, set())        
+        return self._edges.get(node, set())
 
     def get_node_number(self, node):
         if not node in self:
@@ -116,10 +116,36 @@ class Graph(object):
         return graph
 
 
+	def get_apriltags_mapping(self,map_dir=map_dir,csv_filename='autolab_tags_map'):
+		apriltags_mapping = dict()
+		map_path = os.path.join(map_dir, csv_filename + '.csv')
+		with open(map_path, 'rb') as f:
+	   		spamreader = csv.reader(f,skipinitialspace=True)
+	   		for i,row in enumerate(spamreader):
+	   			if i != 0:
+	   				row_ = [element.strip() for element in row] # remove white spaces
+	                   	#TagID - 0, x - 1, y - 2, pos - 3, rot - 4
+	   				if row_[3] == '2' and row_[4] == '0':
+	                    apriltags_mapping[row_[0]] = self.get_node_by_pos([float(row_[1])+1,float(row_[2])-0.25])
+		    		elif row_[3] == '4' and row_[4] == '90':
+	                    apriltags_mapping[row_[0]] = self.get_node_by_pos([float(row_[1])+0.25,float(row_[2])+1])
+		    		elif row_[3] == '6' and row_[4] == '180':
+	                    apriltags_mapping[row_[0]] = self.get_node_by_pos([float(row_[1])-1,float(row_[2])+0.25])
+		   			elif row_[3] == '0' and row_[4] == '270':
+	                    apriltags_mapping[row_[0]] = self.get_node_by_pos([float(row_[1])-0.25,float(row_[2])-1])
+
+        return apriltags_mapping
+
+	def get_node_by_pos(self,position):
+        for n in self._nodes:
+            if self.node_positions[n] = position:
+                return n
+        return None
+
     def draw(self, map_dir, highlight_edges=None, show_weights=None, map_name = 'duckietown', highlight_nodes = None):
-        if highlight_nodes:        
+        if highlight_nodes:
             start_node = highlight_nodes[0]
-            target_node = highlight_nodes[1]        
+            target_node = highlight_nodes[1]
 
         g = graphviz.Digraph(name="duckietown", engine="neato")
         g.edge_attr.update(fontsize = '8', arrowsize = '0.5', arrowhead = 'open')
@@ -156,7 +182,7 @@ class Graph(object):
                 else:
                     c  = 'black'
                     p = '1.5'
-                    
+
                 g.edge(self.node_label_fn(src_node), self.node_label_fn(e.target), taillabel=t, color=c, penwidth = p)
 
 
@@ -167,4 +193,3 @@ class Graph(object):
         image_path = os.path.join(map_dir, map_name+'.png')
         img = cv2.imread(image_path)
         return img[:-50, :]
-
