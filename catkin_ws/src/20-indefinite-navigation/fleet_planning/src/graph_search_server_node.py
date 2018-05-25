@@ -23,8 +23,11 @@ class graph_search_server():
         self.duckietown_problem = GraphSearchProblem(self.duckietown_graph, None, None)
         self.apriltags_mapping = self.duckietown_graph.get_apriltags_mapping(map_dir=map_dir,csv_filename='autolab_tags_map')
         #apriltags_mapping[tagID] = node
+
         print "Graph loaded successfully!\n"
 
+        print self.apriltags_mapping
+        
     def handle_graph_search(self, req):
         """takes request, calculates path and creates corresponding graph image. returns path"""
         # Checking if nodes exists
@@ -42,14 +45,6 @@ class graph_search_server():
         self.duckietown_problem.goal = target_node
         path = self.duckietown_problem.astar_search()
         return GraphSearchResponse(path.actions, path.path)
-
-    def print_all_node_names_and_positions(self):
-        for n in range(1,150):
-            if n % 2 == 1:
-                print 'Node: ' + repr(n)
-                print self.duckietown_graph.get_node_pos(str(n))
-                print 'Tag ID node: ' + repr(self.apriltags_mapping.get(n))
-                print '-----------------'
 
 
 if __name__ == "__main__":
