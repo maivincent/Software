@@ -126,13 +126,13 @@ class Graph(object):
                     row_ = [element.strip() for element in row]
                     #TagID - 0, x - 1, y - 2, pos - 3, rot - 4
                     if row_[3] == '2' and row_[4] == '0':
-                        apriltags_mapping[row_[0]] = self.get_node_by_pos([float(row_[1])+1,float(row_[2])-0.25])
+                        apriltags_mapping[row_[0]] = self.get_node_by_pos((float(row_[1])+1,float(row_[2])-0.25))
                     elif row_[3] == '4' and row_[4] == '90':
-                        apriltags_mapping[row_[0]] = self.get_node_by_pos([float(row_[1])+0.25,float(row_[2])+1])
+                        apriltags_mapping[row_[0]] = self.get_node_by_pos((float(row_[1])+0.25,float(row_[2])+1))
                     elif row_[3] == '6' and row_[4] == '180':
-                        apriltags_mapping[row_[0]] = self.get_node_by_pos([float(row_[1])-1,float(row_[2])+0.25])
+                        apriltags_mapping[row_[0]] = self.get_node_by_pos((float(row_[1])-1,float(row_[2])+0.25))
                     elif row_[3] == '0' and row_[4] == '270':
-                        apriltags_mapping[row_[0]] = self.get_node_by_pos([float(row_[1])-0.25,float(row_[2])-1])
+                        apriltags_mapping[row_[0]] = self.get_node_by_pos((float(row_[1])-0.25,float(row_[2])-1))
         return apriltags_mapping
 
     def get_node_by_pos(self,position):
