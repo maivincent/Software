@@ -124,7 +124,7 @@ class Graph(object):
 	   		for i,row in enumerate(spamreader):
 	   			if i != 0:
 	   				row_ = [element.strip() for element in row] # remove white spaces
-	                   	#TagID - 0, x - 1, y - 2, pos - 3, rot - 4
+	                #TagID - 0, x - 1, y - 2, pos - 3, rot - 4
 	   				if row_[3] == '2' and row_[4] == '0':
 	                    apriltags_mapping[row_[0]] = self.get_node_by_pos([float(row_[1])+1,float(row_[2])-0.25])
 		    		elif row_[3] == '4' and row_[4] == '90':
@@ -138,7 +138,7 @@ class Graph(object):
 
 	def get_node_by_pos(self,position):
         for n in self._nodes:
-            if self.node_positions[n] = position:
+            if self.node_positions[n] == position:
                 return n
         return None
 
