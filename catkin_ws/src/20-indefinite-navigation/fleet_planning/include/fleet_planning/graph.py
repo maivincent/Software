@@ -1,6 +1,6 @@
 import graphviz
 import cv2
-import os
+import os,csv
 
 
 class NodeNotInGraph(Exception):
