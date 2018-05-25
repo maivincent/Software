@@ -35,6 +35,7 @@ class graph_search_server():
         if source_node == None or target_node == None:
             print "Source or target node do not exist."
             return GraphSearchResponse([])
+            
 
         # Running A*
         self.duckietown_problem.start = source_node

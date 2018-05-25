@@ -135,6 +135,7 @@ class Graph(object):
 	                    apriltags_mapping[row_[0]] = self.get_node_by_pos([float(row_[1])-0.25,float(row_[2])-1])
 
         return apriltags_mapping
+        
 
 	def get_node_by_pos(self,position):
         for n in self._nodes:
