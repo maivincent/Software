@@ -27,7 +27,7 @@ class graph_search_server():
         print "Graph loaded successfully!\n"
 
         print self.apriltags_mapping
-        
+
     def handle_graph_search(self, req):
         """takes request, calculates path and creates corresponding graph image. returns path"""
         # Checking if nodes exists
@@ -51,7 +51,6 @@ if __name__ == "__main__":
     rospy.init_node('graph_search_server_node')
     gss = graph_search_server()
     print 'Starting server...\n'
-    #debug
-    gss.print_all_node_names_and_positions()
+    
     s = rospy.Service('graph_search', GraphSearch, gss.handle_graph_search)
     rospy.spin()
