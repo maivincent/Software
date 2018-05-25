@@ -48,7 +48,7 @@ class graph_search_server():
             if n % 2 == 1:
                 print 'Node: ' + repr(n)
                 print self.duckietown_graph.get_node_pos(str(n))
-                print 'Tag ID node: ' + repr(apriltags_mapping.get(n))
+                print 'Tag ID node: ' + repr(self.apriltags_mapping.get(n))
                 print '-----------------'
 
 
