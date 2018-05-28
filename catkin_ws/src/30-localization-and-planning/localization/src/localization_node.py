@@ -62,8 +62,6 @@ class LocalizationNode(object):
                 rospy.logwarn(ex.message)
 
         Tr_w =  avg.get_average() # Average of the opinions
-        print 'Tr_w'
-        print Tr_w
         # Broadcast the robot transform
         if Tr_w is not None:
             # Set the z translation, and x and y rotations to 0
@@ -76,8 +74,6 @@ class LocalizationNode(object):
             T.header.frame_id = self.world_frame
             T.header.stamp = rospy.Time.now()
             T.child_frame_id = self.duckiebot_frame
-            print 'Tr_w for publishing'
-            print Tr_w
             self.pub_tf.publish(TFMessage([T]))
             self.lifetimer = rospy.Time.now()
 
