@@ -31,8 +31,8 @@ class graph_search_server():
     def handle_graph_search(self, req):
         """takes request, calculates path and creates corresponding graph image. returns path"""
         # Checking if nodes exists
-        source_node = apriltags_mapping.get(req.source_node)
-        target_node = apriltags_mapping.get(req.target_node)
+        source_node = self.apriltags_mapping.get(req.source_node)
+        target_node = self.apriltags_mapping.get(req.target_node)
         print 'Tag ID source node: ' + repr(req.source_node) + ' ---> Graph source node: ' +repr(source_node)
         print 'Tag ID target node: ' + repr(req.target_node) + ' ---> Graph target node: ' +repr(target_node)
         if source_node == None or target_node == None:
@@ -51,6 +51,6 @@ if __name__ == "__main__":
     rospy.init_node('graph_search_server_node')
     gss = graph_search_server()
     print 'Starting server...\n'
-    
+
     s = rospy.Service('graph_search', GraphSearch, gss.handle_graph_search)
     rospy.spin()
