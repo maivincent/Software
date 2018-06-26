@@ -63,17 +63,20 @@ class JoyMapper(object):
         self.processButtons(joy_msg)
 
     def publishControl(self):
+        joy_msg = self.joy
+        v_gain = self.v_gain
+        omega_gain = self.omega_gain
+
         car_cmd_msg = Twist2DStamped()
-        car_cmd_msg.header.stamp = self.joy.header.stamp
-        car_cmd_msg.v = self.joy.axes[1] * self.v_gain #Left stick V-axis. Up is positive
-        if self.bicycle_kinematics:
-            # Implements Bicycle Kinematics - Nonholonomic Kinematics
-            # see https://inst.eecs.berkeley.edu/~ee192/sp13/pdf/steer-control.pdf
-            steering_angle = self.joy.axes[3] * self.steer_angle_gain
-            car_cmd_msg.omega = car_cmd_msg.v / self.simulated_vehicle_length * math.tan(steering_angle)
-        else:
-            # Holonomic Kinematics for Normal Driving
-            car_cmd_msg.omega = self.joy.axes[3] * self.omega_gain
+        car_cmd_msg.header.stamp = joy_msg.header.stamp
+
+################################################
+        # MISE TODO:
+        # In the following 2 lines, replace the 0 by the right value.
+        car_cmd_msg.v = 0   #Left stick V-axis. Up is positive.
+        car_cmd_msg.omega = 0 #Right stick V-axis. Up is positive.
+#################################################   
+
         self.pub_car_cmd.publish(car_cmd_msg)
 
 # Button List index of joy.buttons array:

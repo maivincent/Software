@@ -154,19 +154,25 @@ class InverseKinematicsNode(object):
         # adjusting k by gain and trim
         k_r_inv = (self.gain + self.trim) / k_r
         k_l_inv = (self.gain - self.trim) / k_l
-        
-        omega_r = (msg_car_cmd.v + 0.5 * msg_car_cmd.omega * self.baseline) / self.radius
-        omega_l = (msg_car_cmd.v - 0.5 * msg_car_cmd.omega * self.baseline) / self.radius
-        
+
+        l = self.limit
+        B = self.baseline
+        R = self.radius
+####################################
+        # MISE TODO : 
+        # - Complete omega_r and omega_l (remove the 0!)
+        # - Compute u_r_limited and u_r_limited
+        omega_r = 0
+        omega_l = 0
+
         # conversion from motor rotation rate to duty cycle
-        # u_r = (gain + trim) (v + 0.5 * omega * b) / (r * k_r)
-        u_r = omega_r * k_r_inv
-        # u_l = (gain - trim) (v - 0.5 * omega * b) / (r * k_l)
+        u_r = omega_r * k_r_inv 
         u_l = omega_l * k_l_inv
 
-        # limiting output to limit, which is 1.0 for the duckiebot
-        u_r_limited = max(min(u_r, self.limit), -self.limit)
-        u_l_limited = max(min(u_l, self.limit), -self.limit)
+        # limiting u_r and u_l between +l and -l
+        u_r_limited = 0
+        u_l_limited = 0
+#####################################
 
         # Put the wheel commands in a message and publish
         msg_wheels_cmd = WheelsCmdStamped()
