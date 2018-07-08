@@ -64,8 +64,6 @@ class JoyMapper(object):
 
     def publishControl(self):
         joy_msg = self.joy
-        v_gain = self.v_gain
-        omega_gain = self.omega_gain
 
         car_cmd_msg = Twist2DStamped()
         car_cmd_msg.header.stamp = joy_msg.header.stamp
@@ -73,7 +71,7 @@ class JoyMapper(object):
 ################################################
         # MISE TODO:
         # In the following 2 lines, replace the 0 by the right value.
-        car_cmd_msg.v = 0   #Left stick V-axis. Up is positive.
+        car_cmd_msg.v = 0  #Left stick V-axis. Up is positive.
         car_cmd_msg.omega = 0 #Right stick V-axis. Up is positive.
 #################################################   
 
