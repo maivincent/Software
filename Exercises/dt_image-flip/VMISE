@@ -12,7 +12,6 @@ from PIL import Image
 
 
 
-
 def flipImage(img):
     height, width, channels = img.shape
     flip = np.zeros((height, width, 3), np.uint8    )
@@ -20,7 +19,6 @@ def flipImage(img):
         for j in range(width):
             flip[i,j] = img[height-i - 1, width - j - 1]
     return flip
-
 
 
 
