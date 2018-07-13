@@ -13,12 +13,16 @@ from PIL import Image
 
 
 
-def flipImage(img):
+def inverseImage(img):
     height, width, channels = img.shape
-    flip = np.zeros((height, width, 3), np.uint8    )
+    inverse = np.zeros((height, width, 3), np.uint8    )
     ### MISE
-        # Fill flip with pixels from img to flip the img!
-    return flip
+        # Fill inverse with pixels from img to inverse the img colors!
+    for i in range(height):
+        for j in range(width):
+            for k in range(3):
+                inverse[i, j, k] = 255 - img[i,j, k]
+    return inverse
 
 
 
@@ -54,9 +58,9 @@ if not os.path.exists(dir):
     os.makedirs(dir)
 
 reg = img
-flip = flipImage(img)
-doub = np.concatenate((img,flip),1)
+inverse = inverseImage(img)
+doub = np.concatenate((img,inverse),1)
 
 cv2.imwrite(os.path.join(dir , 'regular.jpg'), reg)
-cv2.imwrite(os.path.join(dir , 'flip.jpg'), flip)
+cv2.imwrite(os.path.join(dir , 'inverse.jpg'), inverse)
 cv2.imwrite(os.path.join(dir , 'side-by-side.jpg'), doub)
