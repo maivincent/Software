@@ -147,38 +147,48 @@ class InverseKinematicsNode(object):
         rospy.loginfo("[%s] gain: %s trim: %s baseline: %s radius: %s k: %s limit: %s" % (self.node_name, self.gain, self.trim, self.baseline, self.radius, self.k, self.limit))
 
     def car_cmd_callback(self, msg_car_cmd):
-        # assuming same motor constants k for both motors
-        k_r = self.k
-        k_l = self.k
-
-
-        # adjusting k by gain and trim
-        k_r_inv = (self.gain + self.trim) / k_r
-        k_l_inv = (self.gain - self.trim) / k_l
-
-
-####################################
+ ####################################
         # MISE TODO : 
         # - Complete omega_r and omega_l (remove the 0!)
 
         # v_car : msg_car_cmd.v
         # omega_car : msg_car_cmd.omega
-        # L : self.limit
+
         # B : self.baseline
         # R : self.radius
 
-        # - Compute u_r_limited and u_r_limited
+        # - compute omega_r and omega_l
         omega_r = 0
         omega_l = 0
+#####################################
+
+       # assuming same motor constants k for both motors
+        k_r = self.k
+        k_l = self.k
+
+        # adjusting k by gain and trim
+        k_r_inv = (self.gain + self.trim) / k_r
+        k_l_inv = (self.gain - self.trim) / k_l
 
         # conversion from motor rotation rate to duty cycle
         u_r = omega_r * k_r_inv 
         u_l = omega_l * k_l_inv
 
+####################################
+        # MISE TODO : 
+        # Limit u_r_limited and u_r_limited
+
+        # Challenge: do it without if functions!
+        # Hint: c = min(a, b) --> c is the smallest number between a and b
+        #       d = max(a, b) --> d is the smallest number between a and b
+
+        # L : self.limit
+
         # limiting u_r and u_l between +L and -L
         u_r_limited = 0
         u_l_limited = 0
 #####################################
+
 
         # Put the wheel commands in a message and publish
         msg_wheels_cmd = WheelsCmdStamped()
