@@ -1,0 +1,9 @@
+uv_raw = np.append(uv_raw, np.array([1]))
+        ground_point = np.dot(self.H, uv_raw)
+        
+        x = ground_point[0]
+        y = ground_point[1]
+        z = ground_point[2]
+        point.x = x/z
+        point.y = y/z
+        point.z = 0.0

@@ -162,7 +162,7 @@ class InverseKinematicsNode(object):
         omega_l = 0
 #####################################
 
-       # assuming same motor constants k for both motors
+        # assuming same motor constants k for both motors
         k_r = self.k
         k_l = self.k
 

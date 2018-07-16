@@ -65,16 +65,17 @@ class GroundProjection():
         uv_raw = np.array([pixel.u, pixel.v])
         if not self.rectified_input:
             uv_raw = self.pcm_.rectifyPoint(uv_raw)
-        #uv_raw = [uv_raw, 1]
-        uv_raw = np.append(uv_raw, np.array([1]))
-        ground_point = np.dot(self.H, uv_raw)
+
         point = Point()
-        x = ground_point[0]
-        y = ground_point[1]
-        z = ground_point[2]
-        point.x = x/z
-        point.y = y/z
-        point.z = 0.0
+        ##########
+        # MISE : compute point.x, point.y and point.z, the coordinates in the real world
+        # of the point represented by the pixels u, v on the image
+        
+        # uv_raw has the u-v pixel coordinates in an array [u, v]
+
+        
+
+        ########
         return point
 
     def ground2pixel(self, point):
