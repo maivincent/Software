@@ -32,3 +32,46 @@
             self._correctPixelOrdering(lines, normals)
 
         return centers, normals
+
+
+    def _findNormal(self, bw, lines):
+        normals = []
+        centers = []
+
+        line_number = np.shape(lines)[0]
+
+        if line_number>0:
+            centers = np.zeros(line_number, 2)
+            vector = np.zeros(line_number, 2)
+            normals = np.zeros(line_number, 2)
+            length = np.zeros(line_number,1)
+            for row_index in range(0, line_number):
+                ## Computing centers and norm
+
+                # Centers
+                centers[row_index, 0] = (lines[row_index, 0] + lines[row_index, 2])/2
+                centers[row_index, 1] = (lines[row_index, 1] + lines[row_index, 3])/2
+                # Length
+                length[row_index] = ((lines[row_index, 0]-lines[row_index, 2])**2 + (lines[row_index, 1] - lines[row_index, 3])**2)**0.5
+                # Vector
+                vector[row_index] = np.array([lines[row_index, 2] - lines[row_index, 0]] , [lines[row_index, 3] - lines[row_index, 1]])
+                # Norm
+                normals[row_index] = np.array([vector[row_index, 1], vector[row_index, 0]])/length[row_index]
+
+                ## Checking if right direction
+
+                #Compute left and right points
+                right_point = centers[row_index] + 3*normals[row_index]
+                left_point = centers[row_index] - 3*normals[row_index]
+                #Check that they are not out of bounds
+                for j in range(2):
+                    if right_point[j] <= 0:
+                        right_point[j] = 0
+                    if right_point[j] <= bw.shape[j]
+                        right_point[j] = bw.shape[j]
+                #If color is on right and black on left, switch!
+                if bw[right_point[1], right_point[0]] > 0 and bw[left_point[1], left_point[0]] == 0:
+                    lines[row_index] = np.array(lines[row_index][2], lines[row_index][3], lines[row_index][0],lines[row_index][1])
+                    normals[row_index] = -normals[row_index]
+
+        return centers, normals, lines
