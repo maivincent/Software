@@ -18,10 +18,6 @@ def inverseImage(img):
     inverse = np.zeros((height, width, 3), np.uint8    )
     ### MISE
         # Fill inverse with pixels from img to inverse the img colors!
-    for i in range(height):
-        for j in range(width):
-            for k in range(3):
-                inverse[i, j, k] = 255 - img[i,j, k]
     return inverse
 
 
