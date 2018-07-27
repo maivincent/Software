@@ -123,34 +123,15 @@ class LaneFilterHistogram(Configurable, LaneFilterInterface):
     def generateVote(self,segment):
         p1 = np.array([segment.points[0].x, segment.points[0].y])
         p2 = np.array([segment.points[1].x, segment.points[1].y])
-        t_hat = (p2-p1)/np.linalg.norm(p2-p1)
-        n_hat = np.array([-t_hat[1],t_hat[0]])
-        d1 = np.inner(n_hat,p1)
-        d2 = np.inner(n_hat,p2)
-        l1 = np.inner(t_hat,p1)
-        l2 = np.inner(t_hat,p2)
-        if (l1 < 0):
-            l1 = -l1;
-        if (l2 < 0):
-            l2 = -l2;
-        l_i = (l1+l2)/2
-        d_i = (d1+d2)/2
-        phi_i = np.arcsin(t_hat[1])
-        if segment.color == segment.WHITE: # right lane is white
-            if(p1[0] > p2[0]): # right edge of white lane
-                d_i = d_i - self.linewidth_white
-            else: # left edge of white lane
-                d_i = - d_i
-                phi_i = -phi_i
-            d_i = d_i - self.lanewidth/2
+        
+        ######## MISE 
+        # Compute, for a given segment, the corresponding d_i, phi_i and l_i ()
+        # Make sure to double check if the segment is at the right or the left of the color!
+        # Useful stuff:
+        #       self.lanewidth gives you the lane width
+        #       self.linewidth_white gives you the width of a white line
+        #       self.linewidth_yellow gives you the width of a yellow line
 
-        elif segment.color == segment.YELLOW: # left lane is yellow
-            if (p2[0] > p1[0]): # left edge of yellow lane
-                d_i = d_i - self.linewidth_yellow
-                phi_i = -phi_i
-            else: # right edge of white lane
-                d_i = -d_i
-            d_i =  self.lanewidth/2 - d_i
 
         return d_i, phi_i, l_i
 
